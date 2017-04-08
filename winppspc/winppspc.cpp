@@ -3,6 +3,9 @@ GitHub::Nircek::winppspc::winppspc(std::string host, std::string user, std::stri
     host(host),user(user),pass(pass){
 
 }
+GitHub::Nircek::winppspc::winppspc(){}
+GitHub::Nircek::winppspc::winppspc(std::string host):
+    host(host){}
 
 GitHub::Nircek::winppspc::~winppspc(){
 
@@ -32,6 +35,9 @@ GitHub::Nircek::PPSReply::PPSReply(char c, std::string s):
 GitHub::Nircek::PPSReply::PPSReply(PPSReplyType type, std::string s){
     construct(type,s);
 }
+GitHub::Nircek::PPSReply::PPSReply(){
+    PPSReply(0,"");
+}
 
 void GitHub::Nircek::PPSReply::construct(PPSReplyType type, std::string s){
     replyType=type;
@@ -44,6 +50,18 @@ GitHub::Nircek::PPSReply GitHub::Nircek::winppspc::refresh(){
 GitHub::Nircek::PPSReply GitHub::Nircek::winppspc::push(std::string event){
     return toReply(wineasyhttpclient(host+"/push.php?user="+user+"&pass="+pass+"&event="+event));
 }
+GitHub::Nircek::PPSReply GitHub::Nircek::winppspc::uregister(std::string user,std::string pass){
+    PPSReply reply(0,"");
+    reply=toReply(wineasyhttpclient(host+"/register.php?user="+user+"&pass="+pass));
+    if(reply.replyType==good){this->user=user;this->pass=pass;}
+    return reply;
+}
 GitHub::Nircek::PPSReply GitHub::Nircek::winppspc::toReply(std::string s){
     return PPSReply(s.at(0),s.substr(1));
+}
+GitHub::Nircek::PPSReply GitHub::Nircek::readerror(PPSReply reply){
+    if(reply.replyType!=good){
+        std::cout<<readPPSReplyType(reply.replyType)<<' '<<reply.reply<<'\n';
+    }
+    return reply;
 }
