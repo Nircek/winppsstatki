@@ -1,0 +1,3 @@
+[submodule "winppspc"]
+	path = winppspc
+	url = git@github.com:Nircek/winppspc
